@@ -1,0 +1,23 @@
+version: '2.1'
+services:
+  arangodb:
+    build: ./arangodb
+    ports:
+      - "8529:8529"
+    volumes:
+      - ./arangodb/data:/var/lib/arangodb3
+      - ./arangodb/app:/var/lib/arangodb3-apps
+    environment:
+      - ARANGO_ROOT_PASSWORD=password
+      - ARANGO_NO_AUTH=1 
+      - ARANGO_STORAGE_ENGINE=rocksdb
+  backend:
+    restart: always
+    build: ./backend
+    # DockerFile所在目录
+    ports:
+      - "5000:5000" 
+      # 对外暴露端口，与Dockerfile中端口号一致
+    volumes:
+      - ./backend:/app
+      # 本地工作目录与容器中目录映射
